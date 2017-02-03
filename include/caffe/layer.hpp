@@ -42,7 +42,7 @@ class Layer {
    * layer.
    */
   explicit Layer(const LayerParameter& param)
-    : layer_param_(param), parent_net_(0), is_shared_(false) {
+    : layer_param_(param), parent_net_(0) {
       // Set phase and copy blobs (if there are any).
       phase_ = param.phase();
       if (layer_param_.blobs_size() > 0) {
