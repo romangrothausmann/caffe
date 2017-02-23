@@ -1,4 +1,4 @@
-// TODO (sergeyk): effect should not be dependent on phase. wasted memcpy.
+// do not rename dropout/erase with clear (because clear_param as in LayerSetUp is already used?)
 
 #include <vector>
 
