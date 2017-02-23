@@ -315,7 +315,7 @@ message ParamSpec {
 // NOTE
 // Update the next available ID when you add a new LayerParameter field.
 //
-// LayerParameter next available layer-specific ID: 145 (last added: crop_param)
+// LayerParameter next available layer-specific ID: 150 (last added: erase_param)
 message LayerParameter {
   optional string name = 1; // the layer name
   optional string type = 2; // the layer type
@@ -372,6 +372,7 @@ message LayerParameter {
   optional ArgMaxParameter argmax_param = 103;
   optional BatchNormParameter batch_norm_param = 139;
   optional BiasParameter bias_param = 141;
+  optional EraseParameter erase_param = 149;
   optional ConcatParameter concat_param = 104;
   optional ContrastiveLossParameter contrastive_loss_param = 105;
   optional ConvolutionParameter convolution_param = 106;
@@ -560,6 +561,10 @@ message BiasParameter {
   // Default is the zero (0) initialization, resulting in the BiasLayer
   // initially performing the identity operation.
   optional FillerParameter filler = 3;
+}
+
+message EraseParameter {
+  optional float erase_ratio = 1 [default = 0.5]; // erase ratio
 }
 
 message ContrastiveLossParameter {

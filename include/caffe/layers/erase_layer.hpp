@@ -1,5 +1,5 @@
-#ifndef CAFFE_DROPOUT_LAYER_HPP_
-#define CAFFE_DROPOUT_LAYER_HPP_
+#ifndef CAFFE_ERASE_LAYER_HPP_
+#define CAFFE_ERASE_LAYER_HPP_
 
 #include <vector>
 
@@ -23,22 +23,22 @@ namespace caffe {
  *      the computed outputs @f$ y = |x| @f$
  */
 template <typename Dtype>
-class DropoutLayer : public NeuronLayer<Dtype> {
+class EraseLayer : public NeuronLayer<Dtype> {
  public:
   /**
-   * @param param provides DropoutParameter dropout_param,
-   *     with DropoutLayer options:
-   *   - dropout_ratio (\b optional, default 0.5).
+   * @param param provides EraseParameter erase_param,
+   *     with EraseLayer options:
+   *   - erase_ratio (\b optional, default 0.5).
    *     Sets the probability @f$ p @f$ that any given unit is dropped.
    */
-  explicit DropoutLayer(const LayerParameter& param)
+  explicit EraseLayer(const LayerParameter& param)
       : NeuronLayer<Dtype>(param) {}
   virtual void LayerSetUp(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top);
   virtual void Reshape(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top);
 
-  virtual inline const char* type() const { return "Dropout"; }
+  virtual inline const char* type() const { return "Erase"; }
 
  protected:
   /**
@@ -77,4 +77,4 @@ class DropoutLayer : public NeuronLayer<Dtype> {
 
 }  // namespace caffe
 
-#endif  // CAFFE_DROPOUT_LAYER_HPP_
+#endif  // CAFFE_ERASE_LAYER_HPP_
