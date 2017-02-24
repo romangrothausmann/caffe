@@ -41,6 +41,8 @@ class EraseLayer : public NeuronLayer<Dtype> {
   /// the relative size to erase
   Dtype threshold_;
   unsigned int uint_thres_;
+  vector<int> offset_;
+  vector<int> size_;    
 };
 
 }  // namespace caffe

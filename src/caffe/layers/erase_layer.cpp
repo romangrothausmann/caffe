@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "caffe/layers/erase_layer.hpp"
+#include "caffe/util/vector_helper.hpp"
 
 namespace caffe {
 
@@ -20,6 +21,10 @@ template <typename Dtype>
 void EraseLayer<Dtype>::Reshape(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top) {
   NeuronLayer<Dtype>::Reshape(bottom, top);
+  
+  offset_ = make_vec<int>(10, 10, 10);
+  size_   = make_vec<int>(90, 90, 90);
+
 }
 
 template <typename Dtype>
@@ -29,6 +34,25 @@ void EraseLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
 
   Dtype* top_data = top[0]->mutable_cpu_data();
   caffe_copy(bottom[0]->count(), bottom_data, top_data);
+
+  int i= 0;
+  for (int n = 0; n < top[0]->shape(0); ++n) {
+    for (int c = 0; c < top[0]->shape(1); ++c) {
+      for (int z = 0; z < top[0]->shape(2); ++z) {
+	for (int y = 0; y < top[0]->shape(3); ++y) {
+	  for (int x = 0; x < top[0]->shape(4); ++x) {
+	    if( offset_[0] <= x && x < offset_[0] + size_[0] &&
+		offset_[1] <= y && y < offset_[1] + size_[1] &&
+		offset_[2] <= z && z < offset_[2] + size_[2] ) {
+	      top_data[ i ]= 0; // erases in all n, c
+	      // LOG(INFO) << "erased: " << x << "," << y << "," << z << std::endl;
+	    }
+	    i++;
+	  }
+	}
+      }
+    }
+  }
 }
 
 template <typename Dtype>
