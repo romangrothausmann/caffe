@@ -11,10 +11,6 @@ template <typename Dtype>
 void EraseLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top) {
   NeuronLayer<Dtype>::LayerSetUp(bottom, top);
-  threshold_ = this->layer_param_.erase_param().erase_ratio();
-  DCHECK(threshold_ > 0.);
-  DCHECK(threshold_ < 1.);
-  uint_thres_ = static_cast<unsigned int>(UINT_MAX * threshold_);
 }
 
 template <typename Dtype>
@@ -22,19 +18,24 @@ void EraseLayer<Dtype>::Reshape(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top) {
   NeuronLayer<Dtype>::Reshape(bottom, top);
   
-  offset_ = make_vec<int>(10, 10, 10);
-  size_   = make_vec<int>(90, 90, 90);
-
 }
 
 template <typename Dtype>
 void EraseLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
+
+  const EraseParameter& param = this->layer_param_.erase_param();
   const Dtype* bottom_data = bottom[0]->cpu_data();
 
   Dtype* top_data = top[0]->mutable_cpu_data();
   caffe_copy(bottom[0]->count(), bottom_data, top_data);
 
+  offset_ = new Dtype[3];
+  size_   = new Dtype[3];
+  
+  caffe_rng_gaussian( 3, Dtype( top[0]->shape(1) / 2.0 ), Dtype( param.erase_random_offset_magnitude() ), offset_);
+  caffe_rng_gaussian( 3, Dtype( param.erase_random_size_magnitude() ), Dtype( param.erase_random_size_magnitude() ), size_);
+  
   int i= 0;
   for (int n = 0; n < top[0]->shape(0); ++n) {
     for (int c = 0; c < top[0]->shape(1); ++c) {

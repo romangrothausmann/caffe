@@ -38,11 +38,8 @@ class EraseLayer : public NeuronLayer<Dtype> {
   virtual void Backward_cpu(const vector<Blob<Dtype>*>& top,
       const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
 
-  /// the relative size to erase
-  Dtype threshold_;
-  unsigned int uint_thres_;
-  vector<int> offset_;
-  vector<int> size_;    
+  Dtype* offset_;
+  Dtype* size_;    
 };
 
 }  // namespace caffe
