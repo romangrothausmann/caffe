@@ -568,6 +568,7 @@ message EraseParameter {
   optional VectorFloat erase_offset_sd = 2 ; // sigma for random numbers
   optional VectorFloat erase_size_mean = 3 ; // mean for random numbers
   optional VectorFloat erase_size_sd = 4 ; // sigma for random numbers
+  optional float erase_value = 5  [default = -1.0]; // replace value, should not exist before
 }
 
 message ContrastiveLossParameter {

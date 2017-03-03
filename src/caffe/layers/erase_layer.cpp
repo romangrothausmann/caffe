@@ -33,6 +33,7 @@ void EraseLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
   offset_ = new Dtype[3];
   size_   = new Dtype[3];
   int top_n[3];
+  Dtype val = Dtype( param.erase_value() );
   
   top_n[0] = top[0]->shape(2);
   top_n[1] = top[0]->shape(3);
@@ -52,7 +53,7 @@ void EraseLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
 	    if( offset_[0] <= x && x < offset_[0] + size_[0] &&
 		offset_[1] <= y && y < offset_[1] + size_[1] &&
 		offset_[2] <= z && z < offset_[2] + size_[2] ) {
-	      top_data[ i ]= 0; // erases in all n, c
+	      top_data[ i ]= val; // erases in all n, c
 	      // LOG(INFO) << "erased: " << x << "," << y << "," << z << std::endl;
 	    }
 	    i++;
