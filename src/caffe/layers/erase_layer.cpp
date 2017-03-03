@@ -32,9 +32,16 @@ void EraseLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
 
   offset_ = new Dtype[3];
   size_   = new Dtype[3];
+  int top_n[3];
   
-  caffe_rng_gaussian( 3, Dtype( top[0]->shape(1) / 2.0 ), Dtype( param.erase_random_offset_magnitude() ), offset_);
-  caffe_rng_gaussian( 3, Dtype( param.erase_random_size_magnitude() ), Dtype( param.erase_random_size_magnitude() ), size_);
+  top_n[0] = top[0]->shape(2);
+  top_n[1] = top[0]->shape(3);
+  top_n[2] = top[0]->shape(4);
+      
+  for (int d = 0; d < 3; ++d) {
+      caffe_rng_gaussian( 1, Dtype( top_n[d] / 2.0 + Dtype( param.erase_offset_pos().v(d) ) ), Dtype( param.erase_offset_sd().v(d) ), &offset_[d] );
+      caffe_rng_gaussian( 1, Dtype( param.erase_size_mean().v(d) ), Dtype( param.erase_size_sd().v(d) ), &size_[d] );
+      }
   
   int i= 0;
   for (int n = 0; n < top[0]->shape(0); ++n) {

@@ -564,8 +564,10 @@ message BiasParameter {
 }
 
 message EraseParameter {
-  optional float erase_random_offset_magnitude = 1 [default = 0.0]; // erase center offset magnitude for random numbers
-  optional float erase_random_size_magnitude = 2 [default = 0.0]; // erase center offset magnitude for random numbers
+  optional VectorFloat erase_offset_pos = 1 ; // mean pos from center for random numbers
+  optional VectorFloat erase_offset_sd = 2 ; // sigma for random numbers
+  optional VectorFloat erase_size_mean = 3 ; // mean for random numbers
+  optional VectorFloat erase_size_sd = 4 ; // sigma for random numbers
 }
 
 message ContrastiveLossParameter {
