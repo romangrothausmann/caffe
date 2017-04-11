@@ -39,15 +39,23 @@ void HDF5OutputLayer<Dtype>::SaveBlobs(const vector<Blob<Dtype>*>& bottom, bool 
   sprintf( formatted_file_name, file_name_.c_str(), file_iter_);
   LOG(INFO) << "Saving HDF5 file " << formatted_file_name;
   hid_t file_id = 0;
+  // FileCreatPropList fplist;
+  // H5Pset_obj_track_times(fplist.getId(), false);
+  hid_t fcplist_id = H5Pcreate (H5P_FILE_CREATE);
+  H5Pset_obj_track_times(fcplist_id, false);
+  hid_t faplist_id = H5Pcreate (H5P_FILE_ACCESS);
+  H5Pset_obj_track_times(faplist_id , false);
   if( file_iter_ == 0 ||
       strcmp( formatted_file_name, file_name_.c_str()) != 0) {
     // in first iteration or for differntly named files, create the files
-    file_id = H5Fcreate(formatted_file_name, H5F_ACC_TRUNC, H5P_DEFAULT,
-                       H5P_DEFAULT);
+    file_id = H5Fcreate(formatted_file_name, H5F_ACC_TRUNC, fcplist_id,
+                       faplist_id);
   } else {
     // otherwise open existing file for writing
-    file_id = H5Fopen(formatted_file_name, H5F_ACC_RDWR, H5P_DEFAULT);
+    file_id = H5Fopen(formatted_file_name, H5F_ACC_RDWR, faplist_id);
   }
+  hid_t plist_id = H5Fget_create_plist(file_id);
+  H5Pset_obj_track_times(plist_id, false);
 
   CHECK_GE(file_id, 0) << "Failed to create or reopen HDF5 file" << formatted_file_name;
   for (int i = 0; i < bottom.size(); ++i) {
