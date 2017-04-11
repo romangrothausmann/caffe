@@ -105,6 +105,7 @@ void hdf5_save_nd_dataset<float>(
   } else {
     data = blob.cpu_data();
   }
+  H5Pset_obj_track_times(file_id, false);
   herr_t status = H5LTmake_dataset_float(
       file_id, dataset_name.c_str(), num_axes, dims, data);
   CHECK_GE(status, 0) << "Failed to make float dataset " << dataset_name;
@@ -126,6 +127,7 @@ void hdf5_save_nd_dataset<double>(
   } else {
     data = blob.cpu_data();
   }
+  H5Pset_obj_track_times(file_id, false);
   herr_t status = H5LTmake_dataset_double(
       file_id, dataset_name.c_str(), num_axes, dims, data);
   CHECK_GE(status, 0) << "Failed to make double dataset " << dataset_name;
