@@ -62,12 +62,9 @@ static void mx_mat_to_blob(const mxArray* mx_mat, Blob<float>* blob,
   float* blob_mem_ptr = NULL;
   switch (Caffe::mode()) {
   case Caffe::CPU:
-    blob_mem_ptr = (data_or_diff == DATA ?
-        blob->mutable_cpu_data() : blob->mutable_cpu_diff());
-    break;
   case Caffe::GPU:
     blob_mem_ptr = (data_or_diff == DATA ?
-        blob->mutable_gpu_data() : blob->mutable_gpu_diff());
+        blob->mutable_cpu_data() : blob->mutable_cpu_diff());
     break;
   default:
     mxERROR("Unknown Caffe mode");
