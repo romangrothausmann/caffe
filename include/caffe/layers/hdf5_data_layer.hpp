@@ -54,6 +54,8 @@ class HDF5DataLayer : public Layer<Dtype> {
   std::vector<shared_ptr<Blob<Dtype> > > hdf_blobs_;
   std::vector<unsigned int> data_permutation_;
   std::vector<unsigned int> file_permutation_;
+  long int last_file_; // must hold -1 for init
+  long int last_row_; // must hold -1 for init
 };
 
 }  // namespace caffe
