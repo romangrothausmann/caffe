@@ -188,24 +188,28 @@ void HDF5DataLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
   const int batch_size = this->layer_param_.hdf5_data_param().batch_size();
   for (int i = 0; i < batch_size; ++i) {
     // if at the begin of a new file, load the data
-    if(file_permutation_[current_file_] != last_file_){
+    if(file_permutation_[current_file_] != last_file_){ // only load H5 if file-index (file name) changed)
       if( current_row_ == 0) {
         LoadHDF5FileData(
             hdf_filenames_[file_permutation_[current_file_]].c_str());
       }
-      last_file_ = file_permutation_[current_file_];
+      DLOG(INFO) << "last_file_: " << last_file_;
     }
 
     // copy data to top blobs
-    if(data_permutation_[current_row_] != last_row_){
+    if(data_permutation_[current_row_] != last_row_ || // only copy H5 data if row-index (sub-dataset) changed
+       file_permutation_[current_file_] != last_file_){ // OR if file-index (file name) changed)
       for (int j = 0; j < this->layer_param_.top_size(); ++j) {
         int data_dim = top[j]->count() / top[j]->shape(0);
         caffe_copy(data_dim,
             &hdf_blobs_[j]->cpu_data()[data_permutation_[current_row_]
               * data_dim], &top[j]->mutable_cpu_data()[i * data_dim]);
       }
-      last_row_ = data_permutation_[current_row_];
+      DLOG(INFO) << "last_row_: " << last_row_;
     }
+
+    last_row_ = data_permutation_[current_row_]; // rember last row
+    last_file_ = file_permutation_[current_file_]; // rember last file
 
     // advance index to next "row", possibly go to next file
     ++current_row_;
